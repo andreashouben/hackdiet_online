@@ -1714,7 +1714,21 @@ EOD
 
     } elsif ($CGIargs{q} eq 'validate_user') {
         
-    if (defined($CGIargs{new})) {
+    if (defined($CGIargs{new}) && registrationClosed()) {
+        write_XHTML_prologue($fh, $homeBase, "Registration Closed", undef, $CGIargs{HDiet_handheld});
+        print $fh <<"EOD";
+<h1 class="c">Registration Closed</h1>
+
+<p class="justified">
+This server does not accept new accounts.
+</p>
+
+<p class="centred">
+<a href="/cgi-bin/HackDiet">Sign in</a>
+</p>
+EOD
+        write_XHTML_epilogue($fh, $homeBase);
+    } elsif (defined($CGIargs{new})) {
         
     write_XHTML_prologue($fh, $homeBase, "Create New Account", undef, $CGIargs{HDiet_handheld});
 
@@ -2202,7 +2216,7 @@ in the box.
 EOD
         
     my $concode = $ui->generatePassword(10);
-    my $consig = sha1_hex($concode . "Sodium Chloride");
+    my $consig = sha1_hex($concode . ($ENV{HDIET_SALT} || "Sodium Chloride"));
     $consig =~ tr/a-f/FGJKQW/;
 
     print $fh <<"EOD";
@@ -2359,7 +2373,7 @@ EOD
 
     $CGIargs{c} = '' if !defined($CGIargs{c});
     $CGIargs{HDiet_confirmation} = '' if !$CGIargs{HDiet_confirmation};
-    my $consig = sha1_hex($CGIargs{HDiet_confirmation} . "Sodium Chloride");
+    my $consig = sha1_hex($CGIargs{HDiet_confirmation} . ($ENV{HDIET_SALT} || "Sodium Chloride"));
     $consig =~ tr/a-f/FGJKQW/;
 
     if (($CGIargs{HDiet_username} ne $ui->{login_name}) ||
@@ -2596,7 +2610,7 @@ in the box.
 EOD
         
     my $concode = $ui->generatePassword(10);
-    my $consig = sha1_hex($concode . "Sodium Chloride");
+    my $consig = sha1_hex($concode . ($ENV{HDIET_SALT} || "Sodium Chloride"));
     $consig =~ tr/a-f/FGJKQW/;
 
     print $fh <<"EOD";
@@ -2754,7 +2768,7 @@ EOD
 
     $CGIargs{c} = '' if !defined($CGIargs{c});
     $CGIargs{HDiet_confirmation} = '' if !$CGIargs{HDiet_confirmation};
-    my $consig = sha1_hex($CGIargs{HDiet_confirmation} . "Sodium Chloride");
+    my $consig = sha1_hex($CGIargs{HDiet_confirmation} . ($ENV{HDIET_SALT} || "Sodium Chloride"));
     $consig =~ tr/a-f/FGJKQW/;
 
     if (($CGIargs{HDiet_username} ne $ui->{login_name}) ||
@@ -3149,6 +3163,10 @@ if (0) {        # Set to 1 to investigate reports of account creation problems
 }
 
     
+    if (registrationClosed()) {
+        push(@goofs, "This server does not accept new accounts");
+    }
+
     my $user_file_name;
     $CGIargs{HDiet_username} =~ s/\s+$//;
     if ($CGIargs{HDiet_username} eq '') {
@@ -15311,6 +15329,11 @@ EOD
     }
 
     
+    #   New accounts can be disabled with HDIET_REGISTRATION=closed
+    sub registrationClosed {
+        return lc($ENV{HDIET_REGISTRATION} || 'open') eq 'closed';
+    }
+
     sub validMailDomain {
         my ($dn) = @_;
 

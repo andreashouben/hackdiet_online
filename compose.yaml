@@ -1,0 +1,19 @@
+services:
+  hackdiet:
+    image: ghcr.io/andreashouben/hackdiet_online:latest
+    ports:
+      - "${HDIET_PORT:-8080}:80"
+    volumes:
+      - hackdiet-data:/server/pub/hackdiet
+    environment:
+      # Set to "closed" once your own account exists, so nobody else who
+      # can reach the port can sign up.
+      HDIET_REGISTRATION: ${HDIET_REGISTRATION:-open}
+      # Optional. If unset, random values are generated on first start and
+      # kept in the data volume (.secrets/).
+      HDIET_BADGE_KEY: ${HDIET_BADGE_KEY:-}
+      HDIET_SALT: ${HDIET_SALT:-}
+    restart: unless-stopped
+
+volumes:
+  hackdiet-data:

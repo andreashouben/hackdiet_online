@@ -1,0 +1,6 @@
+# Local development: build the image from this checkout instead of pulling
+# it. Compose merges this file automatically when it sits next to
+# compose.yaml; on a server, just copy compose.yaml.
+services:
+  hackdiet:
+    build: .

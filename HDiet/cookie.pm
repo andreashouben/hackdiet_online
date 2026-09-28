@@ -119,7 +119,7 @@
         my $self = shift;
 
         my $crc = new HDiet::Digest::Crc32();
-        my $cookSig = sprintf("%08x", $crc->strcrc32("Sodium Chloride" .
+        my $cookSig = sprintf("%08x", $crc->strcrc32(($ENV{HDIET_SALT} || "Sodium Chloride") .
             $self->{cookie_id}));
         $cookSig =~ tr/a-f/FGJKQW/;
 
@@ -131,7 +131,6 @@
         my ($name) = @_;
 
         return "$name=" . $self->signCookie() . "; " .
-               "Domain=.fourmilab.ch; " .
                "Path=/cgi-bin/HackDiet; " .
                "Expires=" .
                 jd_to_old_cookie_date(unix_time_to_jd($self->{expiry_time}));
@@ -142,7 +141,6 @@
         my ($name) = @_;
 
         return "$name=EXPIRED; " .
-               "Domain=.fourmilab.ch; " .
                "Path=/cgi-bin/HackDiet; " .
                "Expires=" .
                 jd_to_old_cookie_date(gregorian_to_jd(1990, 1, 1));
@@ -201,7 +199,7 @@
 
         my $cookieSig = substr($signedCookie, 23, 8, "");
         $cookieSig =~ tr/FGJKQW/a-f/;
-        my $cookSig = sprintf("%08x", $crc->strcrc32("Sodium Chloride" .
+        my $cookSig = sprintf("%08x", $crc->strcrc32(($ENV{HDIET_SALT} || "Sodium Chloride") .
             $signedCookie));
 #print("cookSig ($cookSig)  cookieSig ($cookieSig)  signedCookie ($signedCookie)\n");
         if ($cookSig eq $cookieSig) {
