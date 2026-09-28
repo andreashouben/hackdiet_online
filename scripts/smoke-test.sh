@@ -37,8 +37,8 @@ curl -sS -o "$TMP/out" "$CGI"
 expect "$TMP/out" 'Please Sign In' "login page"
 
 # 2. Static files
-for f in hdiet.css figures/prev.png figures/hdicon.ico; do
-    code=$(curl -sS -o /dev/null -w '%{http_code}' "$BASE/hackdiet/online/$f")
+for f in hackdiet/online/hdiet.css hackdiet/online/figures/prev.png favicon.ico; do
+    code=$(curl -sS -o /dev/null -w '%{http_code}' "$BASE/$f")
     [[ "$code" == 200 ]] || fail "$f returned $code"
 done
 ok "static files"
@@ -105,5 +105,31 @@ size=$(curl -sS -o /dev/null -w '%{size_download}' "$BASE/cgi-bin/HackDietBadge?
 [[ "$size" -gt 0 && "$size" -ne "$PLACEHOLDER_BADGE_BYTES" ]] \
     || fail "badge returned placeholder or nothing ($size bytes)"
 ok "badge ($size bytes)"
+
+# 9. XML export and import: an imported month must carry the trend over
+#    from the previous month, as it does for the account it came from
+y=${MONTH%-*}; m=$((10#${MONTH#*-} - 1))
+(( m == 0 )) && { m=12; y=$((y - 1)); }
+PREV=$(printf '%04d-%02d' "$y" "$m")
+post -d "q=update_log&s=$SESSION&m=$PREV&HDiet_tzoffset=0&w1=90.0&w8=89.5&w15=89.0&w22=88.5&w28=88.0"
+expect "$TMP/out" 'class="monthyear"' "previous month saved"
+curl -sS -o "$TMP/export.xml" "$CGI?q=do_exportdb&s=$SESSION&format=xml"
+expect "$TMP/export.xml" '<hackersdiet' "XML export"
+
+USER2="${USER}i"
+post -d "q=new_account&HDiet_username=$USER2&HDiet_password=$PASS&HDiet_rpassword=$PASS" \
+     -d "HDiet_email=smoke@example.com&HDiet_wunit=0&HDiet_dunit=0&HDiet_eunit=0" \
+     -d "HDiet_dchar=.&HDiet_height_cm=180&HDiet_tzoffset=0"
+post -d "q=validate_user&login=x&HDiet_username=$USER2&HDiet_password=$PASS&HDiet_tzoffset=0"
+SESSION2=$(grep -oE 's=[0-9FGJKQW]{40}' "$TMP/out" | head -1 | cut -c3-)
+[[ -n "$SESSION2" ]] || fail "login of import account failed"
+post -F q=csv_import_data -F s="$SESSION2" -F uploaded_file=@"$TMP/export.xml"
+expect "$TMP/out" 'Log items imported: [1-9]' "XML import"
+
+trend1() { curl -sS "$CGI?q=log&s=$1&m=$MONTH&HDiet_tzoffset=0" | grep -oE 'id="T1" value="[^"]*"' | cut -d'"' -f4; }
+t_orig=$(trend1 "$SESSION"); t_imp=$(trend1 "$SESSION2")
+[[ -n "$t_orig" && -n "$t_imp" ]] && awk -v a="$t_orig" -v b="$t_imp" 'BEGIN { d = a - b; exit !(d < 0.01 && d > -0.01) }' \
+    || fail "imported trend differs on day 1: original '$t_orig', imported '$t_imp'"
+ok "imported month carries the trend forward ($t_imp)"
 
 echo "All smoke tests passed."

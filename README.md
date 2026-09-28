@@ -131,6 +131,10 @@ The first commit in this repository is Walker's code as published (minus
   on the sign-in page suggests the HTTPS address of this server
   (`hdiet.js`). Links that are explicitly meant for fourmilab.ch, such as
   the logos and the documentation link, are unchanged.
+- Importing a CSV or XML file recalculates the trend carry-forward
+  through all months, as "Recalculate trend carry-forward" does.
+  Previously each imported month started its trend from its own first
+  weight until that was run by hand (`HackDiet.pl`).
 - `HDiet/Fonts/Times.ttf` (Times New Roman, not redistributable) is not
   included; the image uses the metric-compatible Liberation Serif instead.
 - The images under `figures/` were missing from the source distribution

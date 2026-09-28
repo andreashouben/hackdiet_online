@@ -8051,6 +8051,13 @@ EOD
                 clusterCopy("/server/pub/hackdiet/Users/$user_file_name/$md.hdb");
             }
         }
+
+        #   Carry the trend forward through all months, as "Recalculate
+        #   trend carry-forward" does; otherwise each imported month
+        #   starts its trend from its own first weight.
+        if (grep { $monchanges{$_} > 0 } keys(%mondb)) {
+            propagate_trend($ui, '0000-00', 0);
+        }
     }
 
 

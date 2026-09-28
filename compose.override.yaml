@@ -4,3 +4,5 @@
 services:
   hackdiet:
     build: .
+    # Own tag, so a local build never shadows the published :latest
+    image: hackdiet:dev
