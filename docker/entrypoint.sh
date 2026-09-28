@@ -8,7 +8,10 @@ SECRETS="$DB/.secrets"
 for d in Users Sessions RememberMe Pubname Invitations Backups; do
     mkdir -p "$DB/$d"
 done
-chown -R www-data:www-data "$DB"
+# On NFS shares with root squash chown is not permitted; the directories
+# still work as long as they are writable for www-data.
+chown -R www-data:www-data "$DB" 2>/dev/null \
+    || echo "Warning: could not chown $DB (NFS root squash?), continuing" >&2
 
 # Secrets: a value set in the environment wins; otherwise use the one
 # stored in the volume, generating it on first start. Keeping them in the
