@@ -34,7 +34,8 @@
 
     function checkSecure() {
         if ((!location.protocol.match(/^https:/i)) &&
-            (location.hostname != "server1.fourmilab.ch")) {
+            (location.hostname != "localhost") &&
+            (location.hostname != "127.0.0.1")) {
             alert("Warning!  This document appears to have been " +
                   "received over an insecure Internet link (http: " +
                   "as opposed to https:).  It is possible the data " +
@@ -42,7 +43,7 @@
                   "eavesdropper between your computer and The " +
                   "Hacker's Diet Online server.\n\n" +
                   "To be safe, please re-submit your query to the secure server:\n " +
-                  "    https://www.fourmilab.ch/cgi-bin/HackDiet");
+                  "    https://" + location.host + location.pathname);
         }
     }
 

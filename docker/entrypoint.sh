@@ -31,6 +31,7 @@ secret() {  # secret <file>: print stored secret, create it if missing
 [ -n "$HDIET_SALT" ]      || HDIET_SALT=$(secret salt)
 export HDIET_BADGE_KEY HDIET_SALT
 export HDIET_REGISTRATION="${HDIET_REGISTRATION:-open}"
+export HDIET_BASE_URL="${HDIET_BASE_URL:-}"
 
 # HackDiet.pl logs sign-in failures via syslog; give it a /dev/log
 busybox syslogd -O /dev/stdout

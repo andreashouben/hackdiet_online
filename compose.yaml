@@ -9,6 +9,10 @@ services:
       # Set to "closed" once your own account exists, so nobody else who
       # can reach the port can sign up.
       HDIET_REGISTRATION: ${HDIET_REGISTRATION:-open}
+      # Public address, e.g. https://hackdiet.example.org. Used for badge
+      # embed code, e-mails and XML exports; if unset it is taken from the
+      # request (Host and X-Forwarded-Proto headers).
+      HDIET_BASE_URL: ${HDIET_BASE_URL:-}
       # Optional. If unset, random values are generated on first start and
       # kept in the data volume (.secrets/).
       HDIET_BADGE_KEY: ${HDIET_BADGE_KEY:-}

@@ -26,12 +26,13 @@
 
     sub generateXMLprologue {
         my ($fh) = @_;
+        my $base = HDiet::html::siteBaseURL();
 
         print $fh <<"EOD";
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet type="text/css" href="http://www.fourmilab.ch/hackdiet/online/hackdiet_db.css"?>
+<?xml-stylesheet type="text/css" href="$base/hackdiet/online/hackdiet_db.css"?>
 <!DOCTYPE hackersdiet SYSTEM
-          "http://www.fourmilab.ch/hackdiet/online/hackersdiet.dtd">
+          "$base/hackdiet/online/hackersdiet.dtd">
 <hackersdiet version="1.0">
 EOD
     }

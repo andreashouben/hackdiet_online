@@ -4297,10 +4297,11 @@ EOD
 
 
     
+    my $siteURL = siteBaseURL();
     $ui->sendMail("Password reset",
 "Your password for The Hacker's Diet Online:
 
-    http://www.fourmilab.ch/cgi-bin/HackDiet
+    $siteURL/cgi-bin/HackDiet
 
 has been reset at your request.  The new password is:
 
@@ -10050,13 +10051,14 @@ very long and must not be truncated.
 
 EOD
 
+    my $siteURL = siteBaseURL();
     print $fh <<"EOD";
 <form id="Hdiet_badgeproto" action="#" onsubmit="return false;">
 <p class="centred">
 <textarea cols="80" rows="4" name="protocode" readonly="readonly"
     style="background-color: #FFFFA0; color: inherit;">
 &lt;a href="http://www.fourmilab.ch/hackdiet/online/"&gt;&lt;img style="border: 0px;"
-src="http://www.fourmilab.ch/cgi-bin/HackDietBadge?t=1&amp;amp;b=$uec"
+src="$siteURL/cgi-bin/HackDietBadge?t=1&amp;amp;b=$uec"
 alt="The Hacker's Diet Online" /&gt;&lt;/a&gt;
 </textarea>
 </p>

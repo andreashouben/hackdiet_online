@@ -30,6 +30,7 @@ Configuration is optional. Either edit `compose.yaml` directly, or put a
 |---|---|---|
 | `HDIET_PORT` | `8080` | Host port the app is published on |
 | `HDIET_REGISTRATION` | `open` | `closed` refuses new accounts |
+| `HDIET_BASE_URL` | from request | Public address, e.g. `https://hackdiet.example.org`, used in the badge embed code, e-mails and XML exports. Without it the address is taken from the `Host` and `X-Forwarded-Proto` headers, which works behind a reverse proxy that passes them on. Setting it is safer, since a client controls the `Host` header. |
 | `HDIET_BADGE_KEY` | generated | Key used to encrypt the user ID in badge image URLs. Changing it breaks badge URLs that were already embedded. |
 | `HDIET_SALT` | generated | Salt for "remember me" cookie signatures and the confirmation codes of destructive actions. Changing it signs out remembered sessions. |
 
@@ -123,6 +124,13 @@ The first commit in this repository is Walker's code as published (minus
 - The XML import no longer fetches the DTD referenced in the DOCTYPE of
   exported files; the request to fourmilab.ch failed and aborted the
   import (`HackDiet.pl`).
+- Addresses of this installation no longer point to fourmilab.ch: the
+  badge embed code, the password reset e-mail and the stylesheet and DTD
+  references in XML exports use `HDIET_BASE_URL` or the request's host
+  (`HDiet/html.pm`, `HDiet/xml.pm`, `HackDiet.pl`), and the HTTP warning
+  on the sign-in page suggests the HTTPS address of this server
+  (`hdiet.js`). Links that are explicitly meant for fourmilab.ch, such as
+  the logos and the documentation link, are unchanged.
 - `HDiet/Fonts/Times.ttf` (Times New Roman, not redistributable) is not
   included; the image uses the metric-compatible Liberation Serif instead.
 - The images under `figures/` were missing from the source distribution
@@ -134,11 +142,10 @@ salt, but it is inactive because no cluster hosts are configured.
 ## Known limitations
 
 - **HTTPS warning.** The sign-in page warns when it is not served over
-  HTTPS and suggests fourmilab.ch. A reverse proxy with TLS makes it go
-  away.
+  HTTPS (except on localhost). A reverse proxy with TLS makes it go away.
 - **No e-mail.** There is no `sendmail` in the image, so password reset and
-  the feedback form do not work.
-- **Badge URLs** in the generated embed code point to `www.fourmilab.ch`.
+  the feedback form do not work. The sender and feedback addresses in the
+  code are still the original fourmilab.ch ones.
 
 ## License
 

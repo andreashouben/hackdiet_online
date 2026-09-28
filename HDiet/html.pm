@@ -15,7 +15,8 @@
     our @EXPORT = qw( write_XHTML_prologue
                        generate_XHTML_navigation_bar
                        write_XHTML_epilogue
-                       quoteHTML quoteHTMLFile );
+                       quoteHTML quoteHTMLFile
+                       siteBaseURL );
     our @EXPORT_OK = qw( );
     1;
 
@@ -191,6 +192,23 @@ EOD
             }
         }
         return $os;
+    }
+
+    #   Absolute URL of this installation, for links that leave the page
+    #   (badge embed code, e-mail, XML exports).  HDIET_BASE_URL wins;
+    #   otherwise it is derived from the request, honouring a reverse
+    #   proxy that sets X-Forwarded-Proto.  Only well-formed host names are
+    #   accepted, so the result is safe to embed in HTML and XML.
+    sub siteBaseURL {
+        my $base = $ENV{HDIET_BASE_URL} || '';
+        $base =~ s|/+$||;
+        return $base if $base =~ m{^https?://[A-Za-z0-9.-]+(:\d+)?$};
+
+        my $host = $ENV{HTTP_HOST} || '';
+        $host = 'localhost' if $host !~ m/^[A-Za-z0-9.-]+(:\d+)?$/;
+        my $https = (($ENV{HTTPS} || '') eq 'on') ||
+            (lc($ENV{HTTP_X_FORWARDED_PROTO} || '') eq 'https');
+        return ($https ? 'https' : 'http') . "://$host";
     }
 
     sub quoteHTMLFile {

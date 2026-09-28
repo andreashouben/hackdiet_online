@@ -687,7 +687,11 @@ EOD
 
         my $crypto = Crypt::CBC->new(
                 -key => $ENV{HDIET_BADGE_KEY} || "Super duper top secret!",
-                -cipher => "Crypt::OpenSSL::AES"
+                -cipher => "Crypt::OpenSSL::AES",
+                #   Keep the original key derivation so existing badge URLs
+                #   stay valid; the key itself is random (entrypoint.sh)
+                -pbkdf => 'opensslv1',
+                -nodeprecate => 1
                                     );
         my $encrypted = $crypto->encrypt($plain);
         my $ecrc = sprintf("%08x", $crc->strcrc32($encrypted));
