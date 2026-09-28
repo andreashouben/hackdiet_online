@@ -7665,7 +7665,9 @@ EOD
 
     if ($CGIargs{file} =~ m/\s*<\?xml\s+/) {
         
-    my $parser = XML::LibXML->new();
+    #   Don't fetch the DTD named in the DOCTYPE: exports reference it on
+    #   fourmilab.ch, which libxml2's HTTP client cannot reach any more.
+    my $parser = XML::LibXML->new(load_ext_dtd => 0, no_network => 1);
     my $doc = $parser->parse_string($CGIargs{file});
     my $root = $doc->getDocumentElement();
 

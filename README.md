@@ -120,6 +120,9 @@ The first commit in this repository is Walker's code as published (minus
   which made browsers reject it on any other host (`HDiet/cookie.pm`).
 - New accounts can be disabled with `HDIET_REGISTRATION=closed`
   (`HackDiet.pl`).
+- The XML import no longer fetches the DTD referenced in the DOCTYPE of
+  exported files; the request to fourmilab.ch failed and aborted the
+  import (`HackDiet.pl`).
 - `HDiet/Fonts/Times.ttf` (Times New Roman, not redistributable) is not
   included; the image uses the metric-compatible Liberation Serif instead.
 - The images under `figures/` were missing from the source distribution
