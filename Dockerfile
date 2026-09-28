@@ -40,6 +40,7 @@ COPY HDiet/           /server/bin/httpd/cgi-bin/HDiet/
 # Static web content
 COPY webapp.html hdiet.css hdiet_handheld.css hdiet.js hackersdiet.dtd \
      hackdiet_db.css wz_jsgraphics.js /server/web/hackdiet/online/
+COPY figures/ /server/web/hackdiet/online/figures/
 
 COPY docker/hackdiet.conf  /etc/apache2/sites-available/000-default.conf
 COPY docker/entrypoint.sh  /usr/local/bin/entrypoint.sh

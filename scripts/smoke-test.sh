@@ -37,8 +37,10 @@ curl -sS -o "$TMP/out" "$CGI"
 expect "$TMP/out" 'Please Sign In' "login page"
 
 # 2. Static files
-code=$(curl -sS -o /dev/null -w '%{http_code}' "$BASE/hackdiet/online/hdiet.css")
-[[ "$code" == 200 ]] || fail "hdiet.css returned $code"
+for f in hdiet.css figures/prev.png figures/hdicon.ico; do
+    code=$(curl -sS -o /dev/null -w '%{http_code}' "$BASE/hackdiet/online/$f")
+    [[ "$code" == 200 ]] || fail "$f returned $code"
+done
 ok "static files"
 
 # Registration closed: only check that sign-up is refused, then stop

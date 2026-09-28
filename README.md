@@ -122,6 +122,8 @@ The first commit in this repository is Walker's code as published (minus
   (`HackDiet.pl`).
 - `HDiet/Fonts/Times.ttf` (Times New Roman, not redistributable) is not
   included; the image uses the metric-compatible Liberation Serif instead.
+- The images under `figures/` were missing from the source distribution
+  and were taken from fourmilab.ch (see [THIRD_PARTY.md](THIRD_PARTY.md)).
 
 Clustering (`HDiet/Cluster.pm`, `ClusterSync.pl`) still uses the original
 salt, but it is inactive because no cluster hosts are configured.
@@ -131,8 +133,6 @@ salt, but it is inactive because no cluster hosts are configured.
 - **HTTPS warning.** The sign-in page warns when it is not served over
   HTTPS and suggests fourmilab.ch. A reverse proxy with TLS makes it go
   away.
-- **Missing images.** Logos and icons under `/hackdiet/online/figures/`
-  were not part of the source distribution. The charts are unaffected.
 - **No e-mail.** There is no `sendmail` in the image, so password reset and
   the feedback form do not work.
 - **Badge URLs** in the generated embed code point to `www.fourmilab.ch`.

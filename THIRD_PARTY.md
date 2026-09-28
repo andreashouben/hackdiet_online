@@ -13,6 +13,16 @@ bundled files were written by others and keep their own licenses.
 | `wz_jsgraphics.js` | Walter Zorn | GNU LGPL 2.1 or later |
 | `HDiet/Fonts/DejaVuLGCSans.ttf`, `HDiet/Fonts/DejaVuLGCSans-Bold.ttf` | Bitstream, Inc.; DejaVu fonts team | Bitstream Vera Fonts license with DejaVu changes (free to use, modify and redistribute) |
 
+## Images in `figures/`
+
+The logos, month navigation arrows, favicon, warning-stripe background and
+sample badge were not part of the source distribution. They were copied
+unchanged from <https://www.fourmilab.ch/hackdiet/online/figures/>, where
+the running application uses them. Walker states explicitly that the source
+code is in the public domain; these images belong to the same application
+and are assumed to be in the public domain as well, but there is no
+separate statement for them.
+
 ## Fonts installed in the image
 
 | Font | Source | License |
