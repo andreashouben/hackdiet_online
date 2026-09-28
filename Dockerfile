@@ -30,7 +30,8 @@ RUN apt-get update \
  && apt-get purge -y --auto-remove $buildDeps \
  && rm -rf /var/lib/apt/lists/* /root/.cpanm \
  && a2enmod cgid alias >/dev/null \
- && echo "ServerName localhost" > /etc/apache2/conf-enabled/servername.conf
+ && echo "ServerName localhost" > /etc/apache2/conf-enabled/servername.conf \
+ && sed -i 's|^ErrorLog .*|ErrorLog /proc/self/fd/2|' /etc/apache2/apache2.conf
 
 # CGI programs and Perl modules
 COPY HackDiet.pl      /server/bin/httpd/cgi-bin/HackDiet
